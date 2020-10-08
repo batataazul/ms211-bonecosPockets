@@ -1,0 +1,213 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{listings}
+%\usepackage{listingsutf8}
+
+%--------------------------------------
+ 
+%Portuguese-specific commands
+%--------------------------------------
+\usepackage[portuguese]{babel}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{indentfirst}
+\usepackage{pgfplots}   % pacote para uso do pgfplots
+\usepackage{hyperref} % pacote para inserir links com \url{}
+\usepackage{siunitx}
+\usepackage{pgfplotstable}
+\usepackage{xcolor}
+
+
+
+\definecolor{mygrey}{gray}{0.95}
+\definecolor{mygreen}{cmyk}{0 1 0.00005 0}
+\definecolor{comment}{cmyk}{0.99998 1 0 0}
+\definecolor{number}{gray}{0}
+\definecolor{string}{cmyk}{0 0.99988 1 0}
+
+
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{mygrey},   
+    commentstyle=\color{comment},
+    keywordstyle=\color{mygreen},
+    numberstyle=\tiny\color{number},
+    stringstyle=\color{string},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=octave,
+    literate=
+        {á}{{\'a}}1
+        {à}{{\`a}}1
+        {ã}{{\~a}}1
+        {â}{{\^a}}1
+        {é}{{\'e}}1
+        {ê}{{\^e}}1
+        {í}{{\'i}}1
+        {ó}{{\'o}}1
+        {õ}{{\~o}}1
+        {ú}{{\'u}}1
+        {ü}{{\"u}}1
+        {ç}{{\c{c}}}1
+}
+
+\lstset{style=mystyle}
+
+\newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
+
+
+
+\title{MS211 - Cálculo Numérico - Turma J - Atividade 2
+}
+\author{Luiz Henrique Costa Freitas RA: 202403 \\
+        Gabriel de Freitas Garcia RA: 216179 \\
+        Vanessa Vitória de Arruda Pachalki RA: 244956
+}
+
+\begin{document}
+\renewcommand{\abstractname}{Enunciado Atividade 2}
+\maketitle
+
+\begin{abstract}
+Podemos utilizar os métodos para encontrar raízes de funções para estimar a raiz
+quadrada de um número. Considere a função $f(x) = x^2 - A$, onde $A$ representa o número que queremos estimar a raiz quadrada. Vamos utilizar o método de Newton para tanto.
+\begin{enumerate}
+    \item Escreva um pseudocódigo para o método de Newton e implemente como uma função do Octave. \label{item1}
+    \item Implemente a função $f(x)$ em Octave deixando $A$ como um parâmetro de entrada. \label{item2}
+    \item Teste sua função para $A = 13$. Use $x_0 = 3$ como aproximação inicial e erro $\epsilon = 10^{-8}$\label{item3}
+    \item Teste sua função para um valor de $A$ inteiro à sua escolha, desde que não tenha raiz inteira. Use o mesmo $\epsilon$ do item anterior. Como $x_0$ use um inteiro que
+    deve ser a raiz quadrada de algum número menor que $A$. \label{item4}
+    \item Repita esse experimento com o método das secantes. Utilize $x_1$ um inteiro que é a raiz quadrada de um número maior que $A$.
+    \item Compare o comportamento dos dois métodos nos exemplos acima.
+\end{enumerate}
+   
+\end{abstract}
+
+\section{Respostas}
+
+Para resolver o item~\ref{item1}, desenvolvemos o seguinte algoritmo: 
+\begin{lstlisting}[language = python]
+f = minha_funcao(x)
+f_linha = derivada(f)
+x = x0
+while(f(x) > erro):
+	x = x - f(x)/f_linha(x)
+\end{lstlisting}
+
+A partir deste pseudocódigo e assumindo as funções $f(x)$ e $f^{'}(x)$, o valor inicial $x_0$ e o erro $\epsilon$ anteriormente definidas podemos representar este mesmo algoritmo em Octave:
+
+\begin{lstlisting}[language = octave]
+function res = newton_loop(x,f,f_linha,erro)
+k = 0;
+while(abs(f(x)) > erro)
+x = passo_newton(x,f,f_linha);
+k++;
+disp("Aproximação atual:");
+disp(x);
+endwhile
+res = x;
+disp("Número de passos:");
+disp(k);
+endfunction
+\end{lstlisting}
+\begin{lstlisting} [language=octave]
+function x_res = passo_newton(x,f,f_linha)
+	x_res = x - f(x)/f_linha(x);
+endfunction
+\end{lstlisting}
+Para o item~\ref{item2} definimos a função $f(x)$ desta maneira:
+\begin{lstlisting}[language = octave]
+A = input("Digite um número inteiro:\n");
+f = @(x) x.^2 - A;
+\end{lstlisting}
+
+E com esta definição de função obtivemos o seguinte código para calcular o Método de Newton para a equação dada:
+\begin{lstlisting}[language = octave]
+# Jesus quer transformar sua vida
+format long;
+A = input("Digite um número inteiro:\n");
+f = @(x) x^2 - A;
+f_linha = @(x) 2*x;
+x = input("Digite o valor inicial:\n");
+erro = input("Digite o valor de erro: \n"); 
+x = newton_loop(x,f,f_linha,erro);
+disp("x final:");
+disp(x);
+disp("f(x) final: ");
+disp(f(x));
+\end{lstlisting}
+
+Com este programa obtivemos as repostas para o item \ref{item3}
+\begin{lstlisting}
+>> lab02
+
+Digite um número inteiro:
+13
+Digite o valor inicial:
+3
+Digite o valor de erro:
+10^-8
+Aproximação atual:
+3.666666666666667
+Aproximação atual:
+3.606060606060606
+Aproximação atual:
+3.605551311433664
+Aproximação atual:
+3.605551275463990
+Número de passos:
+4
+x final:
+3.605551275463990
+f(x) final:
+1.776356839400250e-15
+\end{lstlisting}
+
+Semelhantemente obtivemos o resultado para o item \ref{item4}:
+\begin{lstlisting}
+>> lab02
+Digite um número inteiro:
+47
+Digite o valor inicial:
+6
+Digite o valor de erro:
+10^-8
+Aproximação atual:
+6.916666666666667
+Aproximação atual:
+6.855923694779117
+Aproximação atual:
+6.855654605682009
+Aproximação atual:
+6.855654600401045
+Número de passos:
+4
+x final:
+6.855654600401045
+f(x) final:
+7.105427357601002e-15
+\end{lstlisting}
+\end{document}
