@@ -140,10 +140,12 @@ function x_res = passo_newton(x,f,f_linha)
 	x_res = x - f(x)/f_linha(x);
 endfunction
 \end{lstlisting}
+
 Para o item~\ref{item2} definimos a função $f(x)$ desta maneira:
+
 \begin{lstlisting}[language = octave]
 A = input("Digite um número inteiro:\n");
-f = @(x) x.^2 - A;
+f = @(x) x^2 - A;
 \end{lstlisting}
 
 E com esta definição de função obtivemos o seguinte código para calcular o Método de Newton para a equação dada:
