@@ -100,8 +100,8 @@ quadrada de um número. Considere a função $f(x) = x^2 - A$, onde $A$ represen
     \item Teste sua função para $A = 13$. Use $x_0 = 3$ como aproximação inicial e erro $\epsilon = 10^{-8}$\label{item3}
     \item Teste sua função para um valor de $A$ inteiro à sua escolha, desde que não tenha raiz inteira. Use o mesmo $\epsilon$ do item anterior. Como $x_0$ use um inteiro que
     deve ser a raiz quadrada de algum número menor que $A$. \label{item4}
-    \item Repita esse experimento com o método das secantes. Utilize $x_1$ um inteiro que é a raiz quadrada de um número maior que $A$.
-    \item Compare o comportamento dos dois métodos nos exemplos acima.
+    \item Repita esse experimento com o método das secantes. Utilize $x_1$ um inteiro que é a raiz quadrada de um número maior que $A$.\label{item5}
+    \item Compare o comportamento dos dois métodos nos exemplos acima. \label{item6}
 \end{enumerate}
    
 \end{abstract}
@@ -109,7 +109,7 @@ quadrada de um número. Considere a função $f(x) = x^2 - A$, onde $A$ represen
 \section{Respostas}
 
 Para resolver o item~\ref{item1}, desenvolvemos o seguinte algoritmo: 
-\begin{lstlisting}[language = python]
+\begin{lstlisting}
 f = minha_funcao(x)
 f_linha = derivada(f)
 x = x0
@@ -120,6 +120,7 @@ while(f(x) > erro):
 A partir deste pseudocódigo e assumindo as funções $f(x)$ e $f^{'}(x)$, o valor inicial $x_0$ e o erro $\epsilon$ anteriormente definidas podemos representar este mesmo algoritmo em Octave:
 
 \begin{lstlisting}[language = octave]
+# função que calcula o loop do método de Newton
 function res = newton_loop(x,f,f_linha,erro)
 k = 0;
 while(abs(f(x)) > erro)
@@ -132,8 +133,9 @@ res = x;
 disp("Número de passos:");
 disp(k);
 endfunction
-\end{lstlisting}
-\begin{lstlisting} [language=octave]
+
+# função que calcula o passo de Newton
+
 function x_res = passo_newton(x,f,f_linha)
 	x_res = x - f(x)/f_linha(x);
 endfunction
@@ -210,4 +212,114 @@ x final:
 f(x) final:
 7.105427357601002e-15
 \end{lstlisting}
+
+Para a resolução do item \ref{item5} repetimos o experimento e obtivemos o seguinte algoritmo:
+\begin{lstlisting}
+x1 = algum_ponto
+x2 = algum ponto_diferente
+f = minha_funcao(x2)
+g = (f(x2) - f(x1))/(x2-x1)
+while(f(x2) > erro):
+auxiliar = x2
+x2 = x2 - f(x2)/g(x1,x2)
+\end{lstlisting}
+
+E o seguinte código em Octave:
+
+\begin{lstlisting}[language = octave]
+# Jesus quer transformar sua vida
+#código principal
+format long;
+A = input("Digite um número inteiro:\n");
+f = @(x) x^2 - A;
+g = @(x1,x2) (f(x2) - f(x1))/(x2-x1);
+x1 = input("Digite o valor inicial:\n");
+x2 = input("Digite o segundo valor inicial: \n");
+erro = input("Digite o valor de erro: \n"); 
+x2 = sec_loop(x1,x2,f,g,erro);
+disp("x final:");
+disp(x2);
+disp("f(x) final: ");
+disp(f(x2));
+
+#função que executa o loop do método das secantes
+
+function res = sec_loop(x1,x2,f,g,erro)
+	k = 0;
+	while(abs(f(x2)) > erro)
+		aux = x2;
+		x2 = passo_sec(x1,x2,f,g);
+		x1 = aux;
+		k++;
+		disp("Aproximação atual:");
+		disp(x2);
+	endwhile
+	res = x2;
+	disp("Número de passos:");
+	disp(k);
+endfunction
+
+# função que calcula o passo do método das secantes
+
+function x_res = passo_sec(x1,x2,f,g)
+	x_res = x2 - f(x2)/g(x1,x2);
+endfunction`
+\end{lstlisting}
+
+E obtivemos os seguintes resultados:
+
+\begin{lstlisting}
+>> lab02p2
+
+Digite um número inteiro:
+13
+Digite o valor inicial:
+3
+Digite o segundo valor inicial:
+4
+Digite o valor de erro:
+10^-8
+Aproximação atual:
+3.571428571428572
+Aproximação atual:
+3.603773584905661
+Aproximação atual:
+3.605559729526671
+Aproximação atual:
+3.605551273379371
+Aproximação atual:
+3.605551275463987
+Número de passos:
+5
+x final:
+3.605551275463987
+f(x) final:
+-1.776356839400250e-14
+>> lab02p2
+
+Digite um número inteiro:
+47
+Digite o valor inicial:
+6
+Digite o segundo valor inicial:
+7
+Digite o valor de erro:
+10^-8
+Aproximação atual:
+6.846153846153846
+Aproximação atual:
+6.855555555555555
+Aproximação atual:
+6.855654669078660
+Aproximação atual:
+6.855654600400548
+Número de passos:
+4
+x final:
+6.855654600400548
+f(x) final:
+-6.799893981224159e-12
+\end{lstlisting}
+
+
 \end{document}
