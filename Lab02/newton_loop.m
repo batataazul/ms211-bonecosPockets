@@ -10,3 +10,5 @@ function res = newton_loop(x,A,f_linha,erro)
   disp("Número de passos:");
   disp(k);
 endfunction
+
+
