@@ -1,8 +1,8 @@
-function res = sec_loop(x1,x2,f,g,erro)
+function res = sec_loop(x1,x2,A,g,erro)
   k = 0;
-  while(abs(f(x2)) > erro)
+  while(abs(f(x2,A)) > erro)
     aux = x2;
-    x2 = passo_sec(x1,x2,f,g);
+    x2 = passo_sec(x1,x2,A,g);
     x1 = aux;
     k++;
     disp("Aproximação atual:");

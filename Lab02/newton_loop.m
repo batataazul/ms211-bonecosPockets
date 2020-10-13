@@ -1,7 +1,7 @@
-function res = newton_loop(x,f,f_linha,erro)
+function res = newton_loop(x,A,f_linha,erro)
   k = 0;
-  while(abs(f(x)) > erro)
-    x = passo_newton(x,f,f_linha);
+  while(abs(f(x,A)) > erro)
+    x = passo_newton(x,A,f_linha);
     k++;
     disp("Aproximação atual:");
     disp(x);
