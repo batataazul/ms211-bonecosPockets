@@ -1,5 +1,5 @@
 #exercicio 2 - H
-n = 4;
+n = 100;
 H = hilb(n);
 # x = ones(n,1);
 c = H*ones(n,1);
