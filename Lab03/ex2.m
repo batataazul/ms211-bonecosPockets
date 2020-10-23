@@ -1,5 +1,5 @@
 # Exercício 2 - A
-n = 1000;
+n = 100;
 A = rand(n,n);
 # x = ones(n,1);
 b = A*ones(n,1);
