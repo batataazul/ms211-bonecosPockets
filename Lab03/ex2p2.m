@@ -1,5 +1,6 @@
 #exercicio 2 - H
-n = 100;
+format short;
+n = 1000;
 H = hilb(n);
 # x = ones(n,1);
 c = H*ones(n,1);

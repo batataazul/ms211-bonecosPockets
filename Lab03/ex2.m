@@ -1,4 +1,5 @@
 # Exercício 2 - A
+format short;
 n = 1000;
 A = rand(n,n);
 # x = ones(n,1);
