@@ -11,3 +11,4 @@ endwhile
 disp(x);
 disp(norm(f(x),inf));
 disp(k);
+fsolve(f,x)
